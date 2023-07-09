@@ -5,11 +5,9 @@ Description=xrootd instance "%i"
 WantedBy=multi-user.target
 
 [Service]
-Environment=LD_LIBRARY_PATH=/usr/local/lib64
-Environment=XRD_LOGLEVEL=Debug
 User=xrootd
 Type=simple
-ExecStart=/usr/local/bin/xrootd -n %i -l /var/log/xrootd/xrootd_%i.log -c /etc/xrootd/xrootd_%i.cf -k hup
+ExecStart=/usr/bin/xrootd -n %i -l /var/log/xrootd/xrootd_%i.log -c /etc/xrootd/xrootd_%i.cf -k hup
 TimeoutSec=10
 WorkingDirectory=/var/run/xrootd
 LimitNOFILE=65536

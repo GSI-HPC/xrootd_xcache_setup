@@ -19,30 +19,10 @@
       - tinyxml
       - openssl
       - openssl-devel
+      - xrootd
+      - xrdcl-http
+      - xrootd-client
     state: latest
-  become: True
-
-- name: "get xrootd version from git"
-  git: 
-    repo: "https://github.com/xrootd/xrootd/"
-    dest: /xrootd-git
-    version: v5.5.1
-  register: git
-
-- name: "create xrootd build dir"
-  file:
-    path: "/xrootd-build"
-    state: directory
-  become: True
-
-- name: "cmake xrootd" 
-  ansible.builtin.command: "{{ item }}"
-  loop:
-    - "cmake /xrootd-git -Wno-dev" 
-    - "make install -j2"
-  args:
-    chdir: /xrootd-build
-  when: git.changed
   become: True
 
 - name: "create groupxrootd"
@@ -86,8 +66,6 @@
     - "50"
     - "100"
     - "200"
-  args:
-    chdir: /xrootd-build
   become: True
   become_user: xrootd
   when: service_name == "server"
