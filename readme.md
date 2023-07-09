@@ -2,7 +2,7 @@
 
 ## Description
 
-An XRootD - Vagrant setup using multiple XRootD data servers running a prometheus exporter for xrdmonitor
+A XRootD setup using different XCache proxies via the http and xrootd protocols
 
 ## dependencies
 
@@ -12,4 +12,26 @@ Install via:
 vagrant plugin install vagrant-hosts
 ```
 
+## Setup
+
+Up and provision the setuo
+```
+vagrant up
+```
+
+## Test setup
+
+Access the client using vagrant ssh and test the different XCache proxies 
+
+```
+vagrant ssh client
+xrdcp -f xroot://server//100M .
+xrdcp -f xroot://proxy//100M .
+xrdcp -f xroot://memoryproxy//100M .
+xrdcp -f xroot://diskproxy//100M .
+curl -O http://server/10M
+curl -O http://proxy/10M
+curl -O http://memoryproxy/10M
+curl -O http://diskproxy/10M
+```
 
