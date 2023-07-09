@@ -1,4 +1,0 @@
----
-
-- include_tasks:  enable_epel.yml
-- include_tasks:  prometheus.yml
