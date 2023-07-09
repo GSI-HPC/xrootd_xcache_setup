@@ -1,0 +1,2 @@
+configure: server.cf
+service_name: server

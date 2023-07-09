@@ -1,0 +1,28 @@
+---
+# Not needed since ansible already has them
+#  command: hostname
+#  register: hostname
+
+- name: "use packagecloud repo for prometheus"
+  copy: 
+    src: "files/prometheus.repo"
+    dest: "/etc/yum.repos.d/"
+
+- name: "install required packages prometheus"
+  yum:
+    name: 
+      - prometheus
+    state: latest
+  become: True
+  register: installed
+
+- name: "set prometheus config file"
+  copy:
+    src: "files/prometheus.yml"
+    dest: "/etc/prometheus/"
+
+- name: "start prometheus service"
+  service:
+    name: prometheus
+    state: started
+    enabled: yes

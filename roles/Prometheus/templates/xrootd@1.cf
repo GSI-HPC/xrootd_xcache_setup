@@ -1,0 +1,8 @@
+all.role server
+xrd.port 1094
+all.pidpath /var/run/xrootd
+all.adminpath /var/run/xrootd
+cms.space 1k 2k
+all.export / r/w
+oss.localroot /xrdmnt/
+

@@ -1,0 +1,3 @@
+[submodule "xrootd-exporter"]
+	path = xrootd-exporter
+	url = git@git.gsi.de:dc/XRootD-Reps/xrootd-exporter.git

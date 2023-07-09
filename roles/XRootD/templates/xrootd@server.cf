@@ -1,0 +1,29 @@
+all.role server
+xrd.port 1094
+all.pidpath /var/run/xrootd
+all.adminpath /var/run/xrootd
+xrd.protocol http /usr/local/lib64/libXrdHttp.so
+set EnableHttp=1
+{% if service_name == "server" %}
+cms.space 1k 2k
+all.export / r/w
+oss.localroot /xrdmnt/
+{% elif service_name == "proxy" %}
+ofs.osslib /usr/local/lib64/libXrdPss.so
+all.export /
+xrd.allow host *
+pss.origin =xroot,root,http xroot://{{ proxy_origin }}:1094
+
+{% if cache_type == "memory" %}
+pss.cache size {{ memory_proxy_ram }}
+{% endif %}
+{% if cache_type == "disk" %}
+pss.cachelib  libXrdPfc.so
+pfc.ram       1g
+pfc.blocksize 512k
+oss.localroot /xrdmnt/
+#diskusage lowWatermark, highwatermark
+pfc.diskusage 0.9 0.95 purgeinterval 300s
+{% endif %}
+{% endif %}
+

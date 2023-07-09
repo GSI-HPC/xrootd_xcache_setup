@@ -1,0 +1,9 @@
+all.role server
+xrd.port 1094
+all.pidpath /var/run/xrootd
+all.adminpath /var/run/xrootd
+ofs.osslib /usr/local/lib64/libXrdPss.so
+all.export /
+xrd.allow host *
+pss.origin host 172.17.0.10
+pss.port 1094

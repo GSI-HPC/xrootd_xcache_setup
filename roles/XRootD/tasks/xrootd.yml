@@ -1,0 +1,110 @@
+---
+# Not needed since ansible already has them
+#  command: hostname
+#  register: hostname
+
+- name: "install required packages for xrootd"
+  yum:
+    name: 
+      - git
+      - gcc
+      - cmake
+      - zlib
+      - zlib-devel
+      - uuid
+      - libuuid-devel
+      - json-c-devel
+      - json-c
+      - systemd-devel
+      - tinyxml
+      - openssl
+      - openssl-devel
+    state: latest
+  become: True
+
+- name: "get xrootd version from git"
+  git: 
+    repo: "https://github.com/xrootd/xrootd/"
+    dest: /xrootd-git
+    version: v5.5.1
+  register: git
+
+- name: "create xrootd build dir"
+  file:
+    path: "/xrootd-build"
+    state: directory
+  become: True
+
+- name: "cmake xrootd" 
+  ansible.builtin.command: "{{ item }}"
+  loop:
+    - "cmake /xrootd-git -Wno-dev" 
+    - "make install -j2"
+  args:
+    chdir: /xrootd-build
+  when: git.changed
+  become: True
+
+- name: "create groupxrootd"
+  group:
+    name: xrootd
+
+- name: "create user xrootd"
+  user:
+    name: xrootd
+    group: xrootd
+
+- name: "place service xrootd files"
+  copy:
+    src: "files/{{ item }}"
+    dest: "/usr/lib/systemd/system/{{ item }}"
+  with_items:
+    - "cmsd@.service"
+    - "xrootd@.service"
+
+- name: "Make sure xrootd directories exists"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "xrootd"
+    group: "xrootd"
+  loop:
+    - "/xrdmnt"
+    - "/etc/xrootd"
+    - "/var/log/xrootd"
+    - "/var/run/xrootd"
+
+- name: "set configuration files"
+  template:
+    src:  "templates/xrootd@server.cf"
+    dest: "/etc/xrootd/xrootd_{{ service_name }}.cf"
+
+- name: "create files on server"
+  command: "dd if=/dev/urandom of=/xrdmnt/{{ item }}M bs=1M count={{ item }}"
+  loop:
+    - "10"
+    - "50"
+    - "100"
+    - "200"
+  args:
+    chdir: /xrootd-build
+  become: True
+  become_user: xrootd
+  when: service_name == "server"
+
+- name: "allow unpriviled binding of port 80"
+  command: "sysctl -w net.ipv4.ip_unprivileged_port_start=80"
+
+- name: "enable and start xrootd dataserver"
+  service:
+    name: "xrootd@{{ service_name }}"
+    state: "{{ item }}"
+    enabled: yes
+  loop:
+    - restarted
+
+- name: "disable firewalld"
+  service:
+    name: "firewalld"
+    state: stopped
+    enabled: no

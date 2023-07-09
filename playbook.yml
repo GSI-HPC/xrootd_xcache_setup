@@ -1,0 +1,35 @@
+---
+
+- hosts: server,client
+  become: yes
+  roles:
+   - XRootD
+
+- hosts: proxy
+  become: yes
+  roles:
+   - XRootD
+  vars:
+   service_name: proxy
+   proxy_origin: server
+   cache_type: none
+
+- hosts: memoryproxy
+  become: yes
+  roles:
+   - XRootD
+  vars:
+   service_name: proxy
+   proxy_origin: server
+   cache_type: memory
+   memory_proxy_ram: 1G
+
+- hosts: diskproxy
+  become: yes
+  roles:
+   - XRootD
+  vars:
+   service_name: proxy
+   proxy_origin: server
+   cache_type: disk
+
