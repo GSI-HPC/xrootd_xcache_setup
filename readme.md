@@ -29,9 +29,9 @@ xrdcp -f xroot://server//100M .
 xrdcp -f xroot://proxy//100M .
 xrdcp -f xroot://memoryproxy//100M .
 xrdcp -f xroot://diskproxy//100M .
-curl -O http://server/10M
-curl -O http://proxy/10M
-curl -O http://memoryproxy/10M
-curl -O http://diskproxy/10M
+curl -O http://server:1094/10M
+curl -O http://proxy:1094/10M
+curl -O http://memoryproxy:1094/10M
+curl -O http://diskproxy:1094/10M
 ```
 

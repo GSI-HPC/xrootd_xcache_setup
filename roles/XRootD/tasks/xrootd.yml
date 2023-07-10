@@ -6,6 +6,7 @@
 - name: "install required packages for xrootd"
   yum:
     name: 
+      - ansible
       - git
       - gcc
       - cmake

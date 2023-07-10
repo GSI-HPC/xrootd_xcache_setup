@@ -12,7 +12,7 @@ oss.localroot /xrdmnt/
 ofs.osslib /lib64/libXrdPss.so
 all.export /
 xrd.allow host *
-pss.origin =xroot,root,http xroot://{{ proxy_origin }}:1094
+pss.origin =xroot,root,http {{ proxy_origin }}:1094
 
 {% if cache_type == "memory" %}
 pss.cache size {{ memory_proxy_ram }}

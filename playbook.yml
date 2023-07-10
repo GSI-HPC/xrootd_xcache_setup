@@ -4,6 +4,8 @@
   become: yes
   roles:
    - XRootD
+  vars:
+   service_name: server
 
 - hosts: proxy
   become: yes

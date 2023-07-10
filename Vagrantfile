@@ -42,7 +42,7 @@ Vagrant.configure("2") do |config|
 
       
 
-      vm.vm.provision "shell", inline: "mkdir /etc/apparmor.d/disable -p"
+      #vm.vm.provision "shell", inline: "mkdir /etc/apparmor.d/disable -p"
 
 
     end
